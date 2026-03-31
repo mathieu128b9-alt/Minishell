@@ -6,7 +6,7 @@
 /*   By: mathieu <mathieu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 09:54:06 by msuter            #+#    #+#             */
-/*   Updated: 2026/03/31 13:58:42 by mathieu          ###   ########.fr       */
+/*   Updated: 2026/03/31 15:00:23 by mathieu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ int	main(void)
 			continue ;
 		}
 		parser = create_parser(token);
-		testing(parser);
+		free_parser(parser);
+		//testing(parser);
 		if (ft_strncmp(token[0].content, "exit", 5) == 0)
 			end_prog(imput, token, verif_nb);
 		free_token(imput, token, verif_nb);

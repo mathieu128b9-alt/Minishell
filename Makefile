@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: msuter <msuter@student.42.fr>              +#+  +:+       +#+         #
+#    By: mathieu <mathieu@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/15 11:05:43 by msuter            #+#    #+#              #
-#    Updated: 2026/03/20 16:20:24 by msuter           ###   ########.fr        #
+#    Updated: 2026/03/31 15:10:41 by mathieu          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,9 @@ PARSER_SRCS = all_parser/chained_list/redir_chained.c \
 				all_parser/chained_list/t_parser_chained.c \
 				all_parser/parser.c all_parser/utils_parser.c
 
-SRCS = main.c $(LEXER_SRCS) $(PARSER_SRCS)
+EXEC_SRCS = all_exec/exec.c all_exec/utils_exec.c
+
+SRCS = main.c $(LEXER_SRCS) $(PARSER_SRCS) $(EXEC_SRCS)
 
 OBJS = $(SRCS:.c=.o)
 

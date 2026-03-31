@@ -24,7 +24,6 @@ void	case_error(char *imput, t_token *token,
 	free(token);
 	free(imput);
 	printf("%s\n", message_erroor);
-	exit(1);
 }
 
 void	case_continue(char *imput, t_token *token, char *message_erroor)
