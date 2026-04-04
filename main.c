@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuter <msuter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aroduit <aroduit@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/16 09:54:06 by msuter            #+#    #+#             */
-/*   Updated: 2026/04/01 13:36:00 by msuter           ###   ########.fr       */
+/*   Created: 2026/04/04 13:23:20 by aroduit           #+#    #+#             */
+/*   Updated: 2026/04/04 13:23:20 by aroduit          ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	testing(t_parser *parser)
 	}
 }
 
-int	main(void)
+int	main(char **envp)
 {
 	t_token	*token;
 	t_parser	*parser;

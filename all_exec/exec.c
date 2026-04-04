@@ -25,69 +25,63 @@ void	execute(char *cmd_str, char **envp)
 	exit(126);
 }
 
-void	child(char **argv, int *p_fd, char **envp)
+int	child_process(t_parser *current, int fd, int *prev_fd, char **envp)
 {
-	int	infile;
-
-	infile = open(argv[1], O_RDONLY);
-	if (infile == -1)
-		ft_error(argv[1], 1);
-	dup2(infile, STDIN_FILENO);
-	dup2(p_fd[1], STDOUT_FILENO);
-	close(infile);
-	close(p_fd[0]);
-	close(p_fd[1]);
-	execute(argv[2], envp);
+	if (*prev_fd != -1)
+	{
+		dup2(*prev_fd, STDIN_FILENO);
+		close(*prev_fd);
+	}
+	if (current->next)
+	{
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+	}
+	execve(current->arg[0], current->arg, envp);
+	return (1);
 }
 
-void	parent(char **argv, int *p_fd, char **envp)
+void	parent(t_parser *current, int fd, int *prev_fd, char **envp)
 {
-	int	outfile;
-
-	outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (outfile == -1)
-		ft_error(argv[4], 1);
-	dup2(p_fd[0], STDIN_FILENO);
-	dup2(outfile, STDOUT_FILENO);
-	close(outfile);
-	close(p_fd[0]);
-	close(p_fd[1]);
-	execute(argv[3], envp);
+	if (*prev_fd != -1)
+		close(*prev_fd);
+	if (current->next)
+	{
+		close(fd[1]);
+		*prev_fd = fd[0];
+	}
 }
 
-void	wait_children(pid_t pid1, pid_t pid2)
-{
-	int	status;
-
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, &status, 0);
-	if (WIFEXITED(status))
-		exit(WEXITSTATUS(status));
-}
-
-int	execute_cmd(t_parser *parser)
+int	execute_cmd(t_parser *parser, char **envp)
 {
 	int			fd[2];
-	pid_t		pid1;
+	int			prev_fd;
+	pid_t		pid;
+	t_parser	*current;
 
-	if (pipe(fd) == -1)
-		return (1);
-	while (parser->next)
+	prev_fd = -1;
+	current = parser;
+	while (current)
 	{
-		pid1 = fork();
-		if (pid1 == -1)
+		if (current->next)
+		{
+			if (pipe(fd) == -1)
+				return (1);
+		}
+		pid = fork();
+		if (pid == -1)
 			return(1);
-		if (!pid1)
-			child();
-		parser = parser->next;
+		if (!pid)
+		{
+			if (child_process(current, fd, &prev_fd, envp) == 1)
+				return (1);
+		}
+		else
+			parent_process(current, fd, &prev_fd, envp);
+		current = current->next;
 	}
-	pid2 = fork();
-	if (pid2 == -1)
-		return(1);
-	if (!pid2)
-		parent(argv, fd, envp);
-	close(fd[0]);
-	close(fd[1]);
-	wait_children(pid1, pid2);
+	while (wait(NULL) > 0)
+		;
 	return (0);
 }
