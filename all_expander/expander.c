@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	replace(t_parser *parser, char *tmp, int j, int len)
+static void	replace(t_parser *parser, char *tmp, int j, int len)
 {
 	char	*res;
 	int		new_size;
@@ -37,7 +37,7 @@ void	replace(t_parser *parser, char *tmp, int j, int len)
 	parser->arg[j] = res;
 }
 
-char	*schr_in_env(char *var, char **envp)
+static char	*schr_in_env(char *var, char **envp)
 {
 	int	i;
 	int	j;
@@ -51,7 +51,7 @@ char	*schr_in_env(char *var, char **envp)
 	{
 		if (strncmp(var, envp[i], len) == 0)
 		{
-			res = ft_substr(envp[i], len, ft_strlen(envp[i] - len));
+			res = ft_substr(envp[i], len, ft_strlen(envp[i]) - len);
 			return (res);
 		}
 		i++;
@@ -59,7 +59,7 @@ char	*schr_in_env(char *var, char **envp)
 	return ("");
 }
 
-int	count_len(char *str)
+static int	count_len(char *str)
 {
 	int	i;
 
@@ -71,7 +71,7 @@ int	count_len(char *str)
 	return (i);
 }
 
-char	*search_var(t_parser *parser, char **envp)
+void	search_var(t_parser *parser, char **envp)
 {
 	int		i;
 	int		j;
@@ -83,10 +83,13 @@ char	*search_var(t_parser *parser, char **envp)
 	j = 0;
 	while(parser->arg[j])
 	{
+		len = 0;
 		tmp = NULL;
 		while (parser->arg[j][i])
 		{
-			if (parser->arg[j][i] == '$')
+			if (parser->arg[j][i] == '\'')
+				len++;
+			if (parser->arg[j][i] == '$' && len % 2 == 0)
 			{
 				i++;
 				len = count_len(parser->arg[j] + i);
@@ -101,5 +104,6 @@ char	*search_var(t_parser *parser, char **envp)
 		if (tmp != NULL)
 			replace(parser, tmp, j, len);
 		j++;
+		i = 0;
 	}
 }
