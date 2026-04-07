@@ -40,13 +40,11 @@ static void	replace(t_parser *parser, char *tmp, int j, int len)
 static char	*schr_in_env(char *var, char **envp)
 {
 	int	i;
-	int	j;
 	int	len;
 	char *res;
 
 	len = ft_strlen(var);
 	i = 0;
-	j = 0;
 	while (envp[i])
 	{
 		if (strncmp(var, envp[i], len) == 0)
@@ -64,9 +62,9 @@ static int	count_len(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] && (str[i] >= 'a' && str[i] <= 'z'\
-		|| str[i] >= 'A' && str[i] <= 'Z'\
-		|| str[i] == '_' || str[i] >= '0' && str[i] <= '9'))
+	while (str[i] && ((str[i] >= 'a' && str[i] <= 'z')\
+		|| (str[i] >= 'A' && str[i] <= 'Z')\
+		|| (str[i] == '_') || (str[i] >= '0' && str[i] <= '9')))
 		i++;
 	return (i);
 }

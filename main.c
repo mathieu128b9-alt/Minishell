@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroduit <aroduit@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: msuter <msuter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 13:23:20 by aroduit           #+#    #+#             */
-/*   Updated: 2026/04/04 13:23:20 by aroduit          ###   ####lausanne.ch   */
+/*   Updated: 2026/04/07 16:21:44 by msuter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,15 @@ void	testing(t_parser *parser)
 	}
 }
 
-int	main(char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	t_token	*token;
 	t_parser	*parser;
 	char	*imput;
 	int		verif_nb;
 
+	(void)argc;
+	(void)argv;
 	while (1)
 	{
 		imput = readline("minishell>");
@@ -63,8 +65,9 @@ int	main(char **envp)
 			continue ;
 		}
 		parser = create_parser(token);
+		search_var(parser, envp);
 		testing(parser);
-		free_parser(parser);
+		//free_parser(parser);
 		if (ft_strncmp(token[0].content, "exit", 5) == 0)
 			end_prog(imput, token, verif_nb);
 		free_token(imput, token, verif_nb);
