@@ -17,13 +17,16 @@ static void	replace(t_parser *parser, char *tmp, int j, int len)
 	{
 		if (parser->arg[j][i] == '$')
 		{
-			i += len;
+			i += len + 1;
 			while (tmp[l])
 			{
 				res[k] = tmp[l];
 				k++;
 				l++;
 			}
+			while (parser->arg[j][i])
+				res[k++] = parser->arg[j][i++];
+			break;
 		}
 		else
 		{
@@ -34,8 +37,7 @@ static void	replace(t_parser *parser, char *tmp, int j, int len)
 	}
 	res[k] = '\0';
 	free(parser->arg[j]);
-	parser->arg[j] = filter_dup(res);
-	free(res);
+	parser->arg[j] = res;
 }
 
 static char	*schr_in_env(char *var, char **envp)
@@ -46,6 +48,13 @@ static char	*schr_in_env(char *var, char **envp)
 
 	len = ft_strlen(var);
 	i = 0;
+	if (len == 1)
+	{
+		res = malloc (sizeof(char) * 2);
+		res[0] = '$';
+		res[1] = '\0';
+		return (res);
+	}
 	while (envp[i])
 	{
 		if (strncmp(var, envp[i], len) == 0)
@@ -55,7 +64,9 @@ static char	*schr_in_env(char *var, char **envp)
 		}
 		i++;
 	}
-	return ("");
+		res = malloc (sizeof(char) * 1);
+		res[0] = '\0';
+		return (res);
 }
 
 static int	count_len(char *str)
@@ -125,6 +136,7 @@ void	search_var(t_parser *parser, char **envp)
 	{
 		len = 0;
 		tmp = NULL;
+		var = NULL;
 		while (parser->arg[j][i])
 		{
 			if (parser->arg[j][i] == '\'')
@@ -148,7 +160,16 @@ void	search_var(t_parser *parser, char **envp)
 		}
 		if (tmp != NULL)
 			replace(parser, tmp, j, len);
-		j++;
+		if (parser->arg[j][i] == '\0')
+		{
+			free(tmp);
+			free(var);
+			var = ft_strdup(parser->arg[j]);
+			free(parser->arg[j]);
+			parser->arg[j] = filter_dup(var);
+			free (var);
+			j++;
+		}
 		i = 0;
 	}
 }
