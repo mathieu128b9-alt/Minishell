@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aroduit <aroduit@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: msuter <msuter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:44:47 by aroduit           #+#    #+#             */
-/*   Updated: 2026/04/13 14:44:47 by aroduit          ###   ####lausanne.ch   */
+/*   Updated: 2026/04/13 15:37:20 by msuter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,11 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		parser = create_parser(token, shell);
-		search_var(parser, shell);
-		execute_cmd(parser, shell);
+		if (parser != NULL)
+		{
+			search_var(parser, shell);
+			execute_cmd(parser, shell);
+		}
 		//testing(parser);
 		free_parser(parser);
 		if (ft_strncmp(token[0].content, "exit", 5) == 0)

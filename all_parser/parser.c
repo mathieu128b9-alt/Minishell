@@ -48,13 +48,20 @@ void	arg_after_cmd(t_token *token, t_parser *current, int *nb)
 	current->arg[count] = NULL;
 }
 
-void	cmd_or_file(t_token *token, t_parser *current, int *nb, t_shell *shell)
+int	cmd_or_file(t_token *token, t_parser *current, int *nb, t_shell *shell)
 {
 	int	test;
 
 	if (*nb == 0)
 	{
 		current->cmd = get_path(token[0].content, shell->envp);
+		if (current->cmd == NULL)
+		{
+			ft_putstr_fd(token[0].content, 2);
+			ft_putstr_fd(": command not found\n", 2);
+			(*nb)++;
+			return (1);
+		}
 		(*nb)++;
 		arg_after_cmd(token, current, nb);
 	}
@@ -64,10 +71,18 @@ void	cmd_or_file(t_token *token, t_parser *current, int *nb, t_shell *shell)
 		if (is_redirect(token, &test) == 0)
 		{
 			current->cmd = get_path(token[*nb].content, shell->envp);
+			if (current->cmd == NULL)
+			{
+				ft_putstr_fd(token[0].content, 2);
+				ft_putstr_fd(": command not found\n", 2);
+				(*nb)++;
+				return (1);
+			}
 			(*nb)++;
 			arg_after_cmd(token, current, nb);
 		}
 	}
+	return (0);
 }
 
 t_parser	*create_parser(t_token *token, t_shell *shell)
@@ -84,7 +99,10 @@ t_parser	*create_parser(t_token *token, t_shell *shell)
 	while (token[nb].type != TOKEN_END)
 	{
 		if (token[nb].type == TOKEN_WORD)
-			cmd_or_file(token, current, &nb, shell);
+		{
+			if (cmd_or_file(token, current, &nb, shell) == 1)
+				return(NULL);
+		}
 		else if (is_redirect(token, &nb) == 1)
 		{
 			if (current->redir == NULL)
