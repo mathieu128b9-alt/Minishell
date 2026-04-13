@@ -27,7 +27,7 @@ char	*build_path(char *dir, char *cmd)
 	return (path);
 }
 
-void	free_tab(char **tab)
+void	free_tab_(char **tab)
 {
 	int	i;
 
@@ -61,9 +61,9 @@ char	*get_path(char *cmd, char **envp)
 	{
 		path = build_path(paths[i], cmd);
 		if (path && !access(path, X_OK))
-			return (free_tab(paths), path);
+			return (free_tab_(paths), path);
 		free(path);
 	}
-	free_tab(paths);
+	free_tab_(paths);
 	return (NULL);
 }
