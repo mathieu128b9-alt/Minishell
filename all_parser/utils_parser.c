@@ -1,5 +1,14 @@
 #include "../minishell.h"
 
+void	pass_word(int *temp, int *count, t_token *token)
+{
+	while (token[*temp].type == TOKEN_WORD)
+	{
+		(*temp)++;
+		(*count)++;
+	}
+}
+
 void	attrib_pipe(t_parser **current, t_redir **current_redir, int *nb)
 {
 	(*current)->next = new_node();

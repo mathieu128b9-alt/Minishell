@@ -6,7 +6,7 @@
 /*   By: msuter <msuter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 14:44:47 by aroduit           #+#    #+#             */
-/*   Updated: 2026/04/16 16:03:01 by msuter           ###   ########.fr       */
+/*   Updated: 2026/04/17 22:37:01 by msuter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,19 @@
 
 void	init(t_shell *shell, char **envp)
 {
-	shell->envp = envp;
+	int	i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	shell->envp = malloc (sizeof(char *) * (i + 1));
+	i = 0;
+	while (envp[i])
+	{
+		shell->envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	shell->envp[i] = NULL;
 	shell->exit_status = 0;
 	shell->line_num = 0;
 }
@@ -67,6 +79,7 @@ int	main(int argc, char **argv, char **envp)
 		imput = readline("minishell>");
 		if (!imput)
 			case_error(imput, NULL, "erreur lors du malloc du imput", verif_nb);
+		add_history(imput);
 		verif_nb = how_many_tokens(imput);
 		token = lexing(imput, verif_nb);
 		if (token == NULL)

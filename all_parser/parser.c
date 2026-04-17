@@ -27,16 +27,15 @@ void	arg_after_cmd(t_token *token, t_parser *current, int *nb)
 
 	count = 0;
 	temp = *nb;
-	while (token[temp].type == TOKEN_WORD)
-	{
-		temp++;
-		count++;
-	}
+	pass_word(&temp, &count, token);
 	current->arg = malloc(sizeof(char *) * (count + 2));
 	if (!current->arg)
 		return ;
 	count = 0;
-	current->arg[count] = ft_strdup(current->cmd);
+	if (current->cmd == NULL)
+		current->arg[count] = NULL;
+	else
+		current->arg[count] = ft_strdup(current->cmd);
 	count++;
 	while (*nb != temp)
 	{
@@ -47,25 +46,31 @@ void	arg_after_cmd(t_token *token, t_parser *current, int *nb)
 	current->arg[count] = NULL;
 }
 
+void	try_path(t_parser *current, t_token *token, int *nb, t_shell *shell)
+{
+	current->cmd = get_path(token[*nb].content, shell->envp);
+	(*nb)++;
+	arg_after_cmd(token, current, nb);
+}
+
 int	cmd_or_file(t_token *token, t_parser *current, int *nb, t_shell *shell)
 {
 	int	test;
+	int	index;
 
+	index = *nb;
 	if (*nb == 0)
-	{
-		current->cmd = get_path(token[0].content, shell->envp);
-		(*nb)++;
-		arg_after_cmd(token, current, nb);
-	}
+		try_path(current, token, nb, shell);
 	else if (*nb - 1 >= 0)
 	{
 		test = *nb - 1;
 		if (is_redirect(token, &test) == 0)
-		{
-			current->cmd = get_path(token[*nb].content, shell->envp);
-			(*nb)++;
-			arg_after_cmd(token, current, nb);
-		}
+			try_path(current, token, nb, shell);
+	}
+	if (current->cmd == NULL)
+	{
+		ft_putstr_fd(token[index].content, 2);
+		ft_putstr_fd(": command not found\n", 2);
 	}
 	return (0);
 }

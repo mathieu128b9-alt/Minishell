@@ -17,6 +17,11 @@ int	child_process(t_parser *current, int fd[2], int *prev_fd, t_shell *shell)
 		exec_redir(current->redir);
 	// if (is_builtin(current))
 	// 	exit (exec_builtin(current, shell));
+	if (current->cmd == NULL)
+	{
+		shell->exit_status = 127;
+		exit(127);
+	}
 	execve(current->arg[0], current->arg, shell->envp);
 	perror(current->arg[0]);
 	exit(127);

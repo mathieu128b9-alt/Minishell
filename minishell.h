@@ -99,6 +99,7 @@ void		attrib_redir(t_parser *current, t_redir\
 	**current_redir, t_token *token, int *nb);
 void		attrib_pipe(t_parser **current, t_redir **current_redir, int *nb);
 t_redir		*which_type(t_token *token, int *nb);
+void		pass_word(int *temp, int *count, t_token *token);
 
 //! fonctions expander
 void		search_var(t_parser *parser, t_shell *shell);
