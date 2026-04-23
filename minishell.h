@@ -72,6 +72,15 @@ typedef struct s_shell
 	int		line_num;
 }	t_shell;
 
+typedef struct s_var
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*var;
+	char	*tmp;
+}	t_var;
+
 //! fonctions generales
 void		case_error(char *imput, t_token *token,
 				char *message_erroor, int nb_token);
