@@ -29,7 +29,7 @@ static void	replace(t_parser *parser, char *tmp, int j, int len)
 	parser->arg[j] = res;
 }
 
-static char	*schr_in_env(char *var, char **envp)
+char	*schr_in_env(char *var, char **envp)
 {
 	int		i;
 	int		len;
@@ -56,7 +56,7 @@ static char	*schr_in_env(char *var, char **envp)
 	return (res);
 }
 
-static int	count_len(char *str)
+int	count_len(char *str)
 {
 	int	i;
 
@@ -68,7 +68,7 @@ static int	count_len(char *str)
 	return (i);
 }
 
-static void	special_var(t_parser *parser, int j, t_shell *shell)
+void	special_var(t_parser *parser, int j, t_shell *shell)
 {
 	char	*tmp;
 	char	*new;
@@ -99,52 +99,24 @@ static void	special_var(t_parser *parser, int j, t_shell *shell)
 
 void	search_var(t_parser *parser, t_shell *shell)
 {
-	int		i;
-	int		j;
-	int		len;
-	char	*var;
-	char	*tmp;
+	t_var	var;
 
-	i = 0;
-	j = 0;
-	while(parser->arg[j])
+	var.i = 0;
+	var.j = 0;
+	while (parser->arg[var.j])
 	{
-		len = 0;
-		tmp = NULL;
-		var = NULL;
-		while (parser->arg[j][i])
+		var.len = 0;
+		var.tmp = NULL;
+		var.var = NULL;
+		while (parser->arg[var.j][var.i])
 		{
-			if (parser->arg[j][i] == '\'')
-				len++;
-			if (parser->arg[j][i] == '$' && len % 2 == 0)
-			{
-				i++;
-				if (parser->arg[j][i] == '?')
-				{
-					special_var(parser, j, shell);
-					break;
-				}
-				len = count_len(parser->arg[j] + i);
-				tmp = ft_substr(parser->arg[j], i, len);
-				var = ft_strjoin(tmp, "=");
-				free (tmp);
-				tmp = schr_in_env(var, shell->envp);
-				break;
-			}
-			i++;
+			if (verif_and_schr_in_env(parser, &var, shell) == 1)
+				break ;
 		}
-		if (tmp != NULL)
-			replace(parser, tmp, j, len);
-		if (parser->arg[j][i] == '\0')
-		{
-			free(tmp);
-			free(var);
-			var = ft_strdup(parser->arg[j]);
-			free(parser->arg[j]);
-			parser->arg[j] = filter_dup(var);
-			free (var);
-			j++;
-		}
-		i = 0;
+		if (var.tmp != NULL)
+			replace(parser, var.tmp, var.j, var.len);
+		if (parser->arg[var.j][var.i] == '\0')
+			free_my_var(parser, &var);
+		var.i = 0;
 	}
 }

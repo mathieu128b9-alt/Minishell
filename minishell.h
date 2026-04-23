@@ -116,6 +116,11 @@ char		*filter_dup(char *content);
 void		init_replace(int *i, int *k, int *l);
 char		*special_case(char **envp, int len);
 int			case_interrog(t_parser *parser, int *new_size, int *i, int *j);
+int			verif_and_schr_in_env(t_parser *parser, t_var *var, t_shell *shell);
+void		special_var(t_parser *parser, int j, t_shell *shell);
+int			count_len(char *str);
+char		*schr_in_env(char *var, char **envp);
+void		free_my_var(t_parser *parser, t_var *var);
 
 //! fonction exec
 void		exec_redir(t_redir *redir);
