@@ -15,6 +15,9 @@
 # include <sys/ioctl.h>
 # include "libft/libft.h"
 
+# define INT_MAX				2147483647
+# define INT_MIN				-2147483648
+
 typedef enum e_token
 {
 	TOKEN_WORD,
@@ -70,14 +73,15 @@ typedef struct s_shell
 	char	**envp;
 	int		exit_status;
 	int		line_num;
+	int		shell_lvl;
 }	t_shell;
 
 //! fonctions generales
 void		case_error(char *imput, t_token *token,
 				char *message_erroor, int nb_token);
 void		case_continue(char *imput, t_token *token, char *message_erroor);
-void		end_prog(char *imput, t_token *token, int nb_token);
-void		free_token(char *imput, t_token *token, int nb_token);
+//void		end_prog(char *imput, t_token *token, int nb_token);
+void		free_token(char *imput, t_token *token);
 
 //! fonctions lexer
 int			is_space(char c);
@@ -105,10 +109,29 @@ void		pass_word(int *temp, int *count, t_token *token);
 void		search_var(t_parser *parser, t_shell *shell);
 char		*filter_dup(char *content);
 
+//! fonctions builtin
+int			find_env(char **envp, char *var);
+int			ft_strcmp(const char *s1, const char *s2);
+int			is_builtin(t_parser *parser);
+int			exec_builtin(t_parser *parser, t_shell *shell, t_token *token, char *imput);
+int			ft_cd(t_parser *parser, t_shell *shell);
+int			ft_echo(t_parser *parser);
+int			ft_env(t_shell *shell);
+int			ft_exit(t_parser *parser, t_shell *shell, t_token *token, char *imput);
+int 		ft_export(t_parser *parser, t_shell *shell);
+int			ft_pwd(void);
+int			ft_unset(t_parser *parser, t_shell *shell);
+char		**change_var(char **envp, char *var, int i_envp);
+
 //! fonction exec
 void		exec_redir(t_redir *redir);
-int			execute_cmd(t_parser *parser, t_shell *shell);
+int			execute_cmd(t_parser *parser, t_shell *shell, t_token *token, char *imput);
 int			perror_return(char *msg, int ret);
 int			prepare_heredocs(t_parser *parser, t_shell *shell);
+void		free_tab_(char **tab);
+
+//! fonction free
+void		free_all(t_parser *parser, t_shell *shell, t_token *token, char *imput);
+void		free_shell(t_shell *shell);
 
 #endif

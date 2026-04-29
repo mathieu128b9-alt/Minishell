@@ -21,7 +21,7 @@ int	is_builtin(t_parser *parser)
 	return (0);
 }
 
-int	exec_builtin(t_parser *parser, t_shell *shell)
+int	exec_builtin(t_parser *parser, t_shell *shell, t_token *token, char *imput)
 {
 	if (ft_strcmp(parser->cmd, "echo") == 0)
 		return (ft_echo(parser));
@@ -36,6 +36,6 @@ int	exec_builtin(t_parser *parser, t_shell *shell)
 	if (ft_strcmp(parser->cmd, "env") == 0)
 		return (ft_env(shell));
 	if (ft_strcmp(parser->cmd, "exit") == 0)
-		return (ft_exit(parser, shell));
+		return (ft_exit(parser, shell, token, imput));
 	return (0);
 }

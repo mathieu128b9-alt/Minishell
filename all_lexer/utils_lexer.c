@@ -33,9 +33,10 @@ void	case_continue(char *imput, t_token *token, char *message_erroor)
 	printf("%s\n", message_erroor);
 }
 
-void	end_prog(char *imput, t_token *token, int nb_token)
+/*void	end_prog(char *imput, t_token *token)
 {
 	int	i;
+	int	nb_token;
 
 	nb_token = how_many_tokens(imput);
 	i = 0;
@@ -48,18 +49,4 @@ void	end_prog(char *imput, t_token *token, int nb_token)
 	free(imput);
 	exit (0);
 }
-
-void	free_token(char *imput, t_token *token, int nb_token)
-{
-	int	i;
-
-	nb_token = how_many_tokens(imput);
-	i = 0;
-	while (i < nb_token)
-	{
-		free(token[i].content);
-		i++;
-	}
-	free(token);
-	free(imput);
-}
+*/
